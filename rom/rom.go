@@ -164,8 +164,8 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 		ImageName:   strings.TrimSpace(bytesToString(header.ImageName[:])),
 		CartridgeId: bytesToString(header.CartridgeId[:]),
 		CIC:         cic,
-		CRC1:        fmt.Sprintf("%X", header.CRC1),
-		CRC2:        fmt.Sprintf("%X", header.CRC2),
+		CRC1:        fmt.Sprintf("%08X", header.CRC1),
+		CRC2:        fmt.Sprintf("%08X", header.CRC2),
 		Region: CodeDescription{
 			Code:        regionCode,
 			Description: Regions[regionCode],
