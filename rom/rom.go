@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"hash/crc32"
 	"io"
+	"math"
 	"os"
 	"strings"
 )
@@ -83,7 +84,7 @@ type CodeDescription struct {
 type FileInfo struct {
 	Name   string `json:"name"`
 	Format string `json:"format"`
-	Size   int64  `json:"size"`
+	Size   string `json:"size"`
 }
 
 type RomFile struct {
@@ -121,7 +122,7 @@ func FromFile(fh *os.File) (RomFile, error) {
 		return rominfo, err
 	}
 
-	rominfo.File.Size = stat.Size()
+	rominfo.File.Size = formatRomSize(stat.Size())
 	rominfo.File.Name = stat.Name()
 
 	return rominfo, err
@@ -180,6 +181,13 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 	}
 
 	return info, nil
+}
+
+func formatRomSize(size int64) string {
+	const base float64 = 1024
+	fsize := float64(size)
+	exp := int(math.Log(fsize) / math.Log(base))
+	return fmt.Sprintf("%0.0f%c", (fsize / math.Pow(base, float64(exp))), "bKMG"[exp])
 }
 
 func detectRomFormat(signature []byte) (string, error) {
