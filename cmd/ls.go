@@ -15,7 +15,7 @@ import (
 var Output string
 
 func init() {
-	lsCmd.Flags().StringVarP(&Output, "output", "o", "json", "Output format (csv, json)")
+	lsCmd.Flags().StringVarP(&Output, "output", "o", "json", "Output format (csv, json, text)")
 	rootCmd.AddCommand(lsCmd)
 }
 
@@ -69,6 +69,8 @@ func printOne(item rom.RomFile) {
 		items := []rom.RomFile{item}
 		records := romsToCsvRecords(items)
 		printCsv(records)
+	case "text":
+		printText(item)
 	default:
 		fmt.Println("Invalid output format", Output)
 	}
@@ -81,6 +83,11 @@ func printAll(items []rom.RomFile) {
 	case "csv":
 		records := romsToCsvRecords(items)
 		printCsv(records)
+	case "text":
+		for _, item := range items {
+			printText(item)
+			fmt.Println("")
+		}
 	default:
 		fmt.Println("Invalid output format", Output)
 	}
@@ -151,6 +158,37 @@ func infoToRecord(info rom.RomFile) []string {
 		info.CRC1,
 		info.CRC2,
 	}
+}
+
+var textFormat = `File:
+  Name:    %s
+  Size:    %s
+  Format:  %s
+
+Title:     %s
+ROM ID:    %s
+Media:     %s (%s)
+Version:   1.%d
+Region:    %s (%s)
+CIC:       %s
+CRC 1:     %s
+CRC 2:     %s`
+
+func printText(info rom.RomFile) {
+	fmt.Printf(textFormat,
+		info.File.Name,
+		info.File.Size,
+		info.File.Format,
+		info.ImageName,
+		info.CartridgeId,
+		info.MediaFormat.Code, info.MediaFormat.Description,
+		info.Version,
+		info.Region.Code, info.Region.Description,
+		info.CIC,
+		info.CRC1,
+		info.CRC2,
+	)
+	fmt.Println("")
 }
 
 func printCsv(records [][]string) {
