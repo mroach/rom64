@@ -68,7 +68,7 @@ func printOne(item rom.RomFile) {
 	case "csv":
 		items := []rom.RomFile{item}
 		records := romsToCsvRecords(items)
-		printCsv(records)
+		printCsv(records, defaultCsvHeaders)
 	case "text":
 		printText(item)
 	default:
@@ -82,7 +82,7 @@ func printAll(items []rom.RomFile) {
 		printJson(items)
 	case "csv":
 		records := romsToCsvRecords(items)
-		printCsv(records)
+		printCsv(records, defaultCsvHeaders)
 	case "text":
 		for _, item := range items {
 			printText(item)
@@ -122,21 +122,14 @@ func isProbablyRom(path string) bool {
 	return false
 }
 
+var defaultCsvHeaders = []string{
+	"file_name", "file_format", "file_size",
+	"image_name", "media_format", "cartridge_id",
+	"region_name", "cic", "crc1", "crc2",
+}
+
 func romsToCsvRecords(infos []rom.RomFile) [][]string {
 	out := make([][]string, 0)
-	out = append(out, []string{
-		"file_name",
-		"file_format",
-		"file_size",
-		"image_name",
-		"media_format",
-		"cartridge_id",
-		"region_code",
-		"region_name",
-		"cic",
-		"crc1",
-		"crc2",
-	})
 	for _, info := range infos {
 		out = append(out, infoToRecord(info))
 	}
@@ -152,7 +145,6 @@ func infoToRecord(info rom.RomFile) []string {
 		info.ImageName,
 		info.MediaFormat.Code,
 		info.CartridgeId,
-		info.Region.Code,
 		info.Region.Description,
 		info.CIC,
 		info.CRC1,
@@ -191,8 +183,11 @@ func printText(info rom.RomFile) {
 	fmt.Println("")
 }
 
-func printCsv(records [][]string) {
+func printCsv(records [][]string, headers []string) {
 	w := csv.NewWriter(os.Stdout)
+	if err := w.Write(headers); err != nil {
+		log.Fatalln("error writing csv headers:", err)
+	}
 	if err := w.WriteAll(records); err != nil {
 		log.Fatalln("error writing csv:", err)
 	}
