@@ -3,6 +3,7 @@ package rom
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"hash/crc32"
 	"io"
@@ -56,20 +57,22 @@ var Regions = map[string]string{
 	"Y": "Europe",
 }
 
+// The first 4 bytes of a ROM are used for endianness detection and will already
+// have been read by the time this struct is loaded. Noted address are absolute to the file.
+// http://en64.shoutwiki.com/wiki/ROM#Cartridge_ROM_Header
 type romFileHeader struct {
-	EndiannessSignature [4]byte  // 0x00
-	ClockRate           uint32   // 0x04
-	ProgramCounter      uint32   // 0x08
-	ReleaseAddress      uint32   // 0x0C
-	CRC1                uint32   // 0x10
-	CRC2                uint32   // 0x14
-	Unknown1            [8]byte  // 0x18
-	ImageName           [20]byte // 0x20
-	Unknown2            [4]byte  // 0x34
-	MediaFormat         [4]byte  // 0x38
-	CartridgeId         [2]byte  // 0x3C
-	RegionCode          [1]byte  // 0x3E
-	Version             byte     // 0x3F
+	ClockRate      uint32   // 0x04
+	ProgramCounter uint32   // 0x08
+	ReleaseAddress uint32   // 0x0C
+	CRC1           uint32   // 0x10
+	CRC2           uint32   // 0x14
+	Unknown1       [8]byte  // 0x18
+	ImageName      [20]byte // 0x20
+	Unknown2       [4]byte  // 0x34
+	MediaFormat    [4]byte  // 0x38
+	CartridgeId    [2]byte  // 0x3C
+	RegionCode     [1]byte  // 0x3E
+	Version        byte     // 0x3F
 }
 
 type CodeDescription struct {
@@ -116,7 +119,19 @@ func ParseIo(r io.Reader) (RomFile, error) {
 	var header romFileHeader
 	var info RomFile
 
-	err := binary.Read(r, binary.BigEndian, &header)
+	// Read the first 4 bytes to detect the ROM file format
+	var endiannessSignature [4]byte
+	io.ReadFull(r, endiannessSignature[:])
+	romFormat, err := detectRomFormat(endiannessSignature[:])
+	if err != nil {
+		return info, err
+	}
+
+	headerBytes := make([]byte, 0x40 - len(endiannessSignature))
+	binary.Read(r, binary.BigEndian, headerBytes)
+	headerBytes = maybeReverseBytes(headerBytes, romFormat)
+
+	err = binary.Read(bytes.NewReader(headerBytes), binary.BigEndian, &header)
 	if err != nil {
 		return info, err
 	}
@@ -126,9 +141,8 @@ func ParseIo(r io.Reader) (RomFile, error) {
 	if err != nil {
 		return info, err
 	}
-
+	bootcode = maybeReverseBytes(bootcode, romFormat)
 	bootcodeHash := crc32.ChecksumIEEE(bootcode)
-
 	cic := bootcodeChecksumToCIC[bootcodeHash]
 
 	mediaFormatCode := bytesToString(header.MediaFormat[3:3])
@@ -149,11 +163,56 @@ func ParseIo(r io.Reader) (RomFile, error) {
 			Description: MediaFormats[mediaFormatCode],
 		},
 		File: FileInfo{
-			Format: romFormat(header.EndiannessSignature[:]),
+			Format: romFormat,
 		},
 	}
 
 	return info, nil
+}
+
+func detectRomFormat(signature []byte) (string, error) {
+	if bytes.Equal(signature, headerZ64) {
+		return "z64", nil
+	}
+
+	if bytes.Equal(signature, headerV64) {
+		return "v64", nil
+	}
+
+	if bytes.Equal(signature, headerN64) {
+		return "n64", nil
+	}
+
+	return "", errors.New("Unknown ROM format. Invalid file?")
+}
+
+func maybeReverseBytes(bytes []byte, romFormat string) []byte {
+	if romFormat == "v64" {
+		return reverseBytes(bytes, 2)
+	}
+
+	if romFormat == "n64" {
+		return reverseBytes(bytes, 4)
+	}
+
+	return bytes
+}
+
+func reverseBytes(bytes []byte, size int) (reversed []byte) {
+	for _, chunk := range chunk(bytes, size) {
+		for i := len(chunk) - 1; i >= 0; i = i - 1 {
+			reversed = append(reversed, chunk[i])
+		}
+	}
+
+	return reversed
+}
+
+func chunk(bytes []byte, chunkSize int) (chunks [][]byte) {
+	for chunkSize < len(bytes) {
+		bytes, chunks = bytes[chunkSize:], append(chunks, bytes[0:chunkSize:chunkSize])
+	}
+	return append(chunks, bytes)
 }
 
 func bytesToString(bytes []byte) string {
@@ -167,20 +226,4 @@ func bytesToString(bytes []byte) string {
 	}
 
 	return string(chars)
-}
-
-func romFormat(signature []byte) string {
-	if bytes.Equal(signature, headerZ64) {
-		return "z64"
-	}
-
-	if bytes.Equal(signature, headerV64) {
-		return "v64"
-	}
-
-	if bytes.Equal(signature, headerN64) {
-		return "n64"
-	}
-
-	return "UNKNOWN"
 }
