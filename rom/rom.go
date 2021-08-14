@@ -37,7 +37,7 @@ var MediaFormats = map[string]string{
 
 var Regions = map[string]string{
 	"7": "Beta",
-	"A": "Generic NTSC",
+	"A": "JP/US",
 	"B": "BR",
 	"C": "CN",
 	"D": "DE",
