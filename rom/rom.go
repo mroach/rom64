@@ -145,7 +145,7 @@ func ParseIo(r io.Reader) (RomFile, error) {
 	bootcodeHash := crc32.ChecksumIEEE(bootcode)
 	cic := bootcodeChecksumToCIC[bootcodeHash]
 
-	mediaFormatCode := bytesToString(header.MediaFormat[3:3])
+	mediaFormatCode := bytesToString(header.MediaFormat[3:4])
 	regionCode := bytesToString(header.RegionCode[:])
 
 	info = RomFile{
