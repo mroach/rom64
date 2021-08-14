@@ -9,13 +9,14 @@ import (
 	"path/filepath"
 
 	"github.com/mroach/n64-go/rom"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
 var Output string
 
 func init() {
-	lsCmd.Flags().StringVarP(&Output, "output", "o", "json", "Output format (csv, json, text)")
+	lsCmd.Flags().StringVarP(&Output, "output", "o", "table", "Output format (csv, json, text, table)")
 	rootCmd.AddCommand(lsCmd)
 }
 
@@ -69,6 +70,10 @@ func printOne(item rom.RomFile) {
 		items := []rom.RomFile{item}
 		records := romsToCsvRecords(items)
 		printCsv(records, defaultCsvHeaders)
+	case "table":
+		items := []rom.RomFile{item}
+		records := romsToCsvRecords(items)
+		printTable(records, defaultTableHeaders)
 	case "text":
 		printText(item)
 	default:
@@ -83,6 +88,9 @@ func printAll(items []rom.RomFile) {
 	case "csv":
 		records := romsToCsvRecords(items)
 		printCsv(records, defaultCsvHeaders)
+	case "table":
+		records := romsToCsvRecords(items)
+		printTable(records, defaultTableHeaders)
 	case "text":
 		for _, item := range items {
 			printText(item)
@@ -126,6 +134,11 @@ var defaultCsvHeaders = []string{
 	"file_name", "file_format", "file_size",
 	"image_name", "media_format", "cartridge_id",
 	"region_name", "cic", "crc1", "crc2",
+}
+
+var defaultTableHeaders = []string{
+	"File Name", "Format", "Size", "Title",
+	"Type", "ID", "Region", "CIC", "CRC1", "CRC2",
 }
 
 func romsToCsvRecords(infos []rom.RomFile) [][]string {
@@ -181,6 +194,14 @@ func printText(info rom.RomFile) {
 		info.CRC2,
 	)
 	fmt.Println("")
+}
+
+func printTable(records [][]string, headers []string) {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAutoFormatHeaders(false)
+	table.SetHeader(headers)
+	table.AppendBulk(records)
+	table.Render()
 }
 
 func printCsv(records [][]string, headers []string) {
