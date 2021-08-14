@@ -98,8 +98,20 @@ type RomFile struct {
 	File        FileInfo        `json:"file"`
 }
 
-func ParseFile(fh *os.File) (RomFile, error) {
-	rominfo, err := ParseIo(fh)
+func FromPath(path string) (RomFile, error) {
+	var info RomFile
+
+	f, err := os.Open(path)
+	if err != nil {
+		return info, err
+	}
+	defer f.Close()
+
+	return FromFile(f)
+}
+
+func FromFile(fh *os.File) (RomFile, error) {
+	rominfo, err := FromIoReader(fh)
 	if err != nil {
 		return rominfo, err
 	}
@@ -115,7 +127,7 @@ func ParseFile(fh *os.File) (RomFile, error) {
 	return rominfo, err
 }
 
-func ParseIo(r io.Reader) (RomFile, error) {
+func FromIoReader(r io.Reader) (RomFile, error) {
 	var header romFileHeader
 	var info RomFile
 
@@ -127,7 +139,7 @@ func ParseIo(r io.Reader) (RomFile, error) {
 		return info, err
 	}
 
-	headerBytes := make([]byte, 0x40 - len(endiannessSignature))
+	headerBytes := make([]byte, 0x40-len(endiannessSignature))
 	binary.Read(r, binary.BigEndian, headerBytes)
 	headerBytes = maybeReverseBytes(headerBytes, romFormat)
 
