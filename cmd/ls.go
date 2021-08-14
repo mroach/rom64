@@ -193,9 +193,7 @@ func printText(info rom.RomFile) {
 
 func printCsv(records [][]string) {
 	w := csv.NewWriter(os.Stdout)
-	w.WriteAll(records)
-
-	if err := w.Error(); err != nil {
+	if err := w.WriteAll(records); err != nil {
 		log.Fatalln("error writing csv:", err)
 	}
 }

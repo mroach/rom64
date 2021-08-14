@@ -133,15 +133,22 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 	var info RomFile
 
 	// Read the first 4 bytes to detect the ROM file format
-	var endiannessSignature [4]byte
-	io.ReadFull(r, endiannessSignature[:])
+
+	endiannessSignature := make([]byte, 4)
+	_, err := io.ReadFull(r, endiannessSignature)
+	if err != nil {
+		return info, err
+	}
 	romFormat, err := detectRomFormat(endiannessSignature[:])
 	if err != nil {
 		return info, err
 	}
 
 	headerBytes := make([]byte, 0x40-len(endiannessSignature))
-	binary.Read(r, binary.BigEndian, headerBytes)
+	err = binary.Read(r, binary.BigEndian, headerBytes)
+	if err != nil {
+		return info, err
+	}
 	headerBytes = maybeReverseBytes(headerBytes, romFormat)
 
 	err = binary.Read(bytes.NewReader(headerBytes), binary.BigEndian, &header)
