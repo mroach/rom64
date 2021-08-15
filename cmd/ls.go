@@ -10,6 +10,7 @@ import (
 
 func init() {
 	var outputFormat string
+	var includeMd5 bool
 
 	var lsCmd = &cobra.Command{
 		Use:     "ls",
@@ -35,6 +36,12 @@ func init() {
 					return err
 				}
 
+				if includeMd5 {
+					if err := info.AddMD5(); err != nil {
+						return err
+					}
+				}
+
 				fileInfos = append(fileInfos, info)
 			}
 
@@ -43,6 +50,7 @@ func init() {
 	}
 
 	lsCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format")
+	lsCmd.Flags().BoolVarP(&includeMd5, "with-md5", "m", false, "Calculate MD5 hash")
 
 	rootCmd.AddCommand(lsCmd)
 }

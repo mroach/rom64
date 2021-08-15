@@ -22,6 +22,10 @@ func init() {
 				return err
 			}
 
+			if err := info.AddMD5(); err != nil {
+				return err
+			}
+
 			return formatters.PrintOne(info, outputFormat)
 		},
 	}
