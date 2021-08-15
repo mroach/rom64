@@ -16,7 +16,7 @@ import (
 var Output string
 
 func init() {
-	lsCmd.Flags().StringVarP(&Output, "output", "o", "table", "Output format (csv, json, text, table)")
+	lsCmd.Flags().StringVarP(&Output, "output", "o", "", "Output format (csv, json, text, table)")
 	rootCmd.AddCommand(lsCmd)
 }
 
@@ -48,11 +48,19 @@ var lsCmd = &cobra.Command{
 				fileInfos = append(fileInfos, info)
 			}
 
+			if Output == "" {
+				Output = "table"
+			}
+
 			printAll(fileInfos)
 		} else {
 			info, err := rom.FromPath(path)
 			if err != nil {
 				return err
+			}
+
+			if Output == "" {
+				Output = "text"
 			}
 
 			printOne(info)
