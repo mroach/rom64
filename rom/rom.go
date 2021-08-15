@@ -174,6 +174,7 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 		CIC:         cic,
 		CRC1:        fmt.Sprintf("%08X", header.CRC1),
 		CRC2:        fmt.Sprintf("%08X", header.CRC2),
+		Version:     header.Version,
 		Region: CodeDescription{
 			Code:        regionCode,
 			Description: Regions[regionCode],

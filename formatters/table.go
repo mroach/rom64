@@ -15,7 +15,7 @@ func PrintTable(romfiles []rom.RomFile) error {
 }
 
 var defaultTableHeaders = []string{
-	"Title", "Format", "Size", "ROM ID",
+	"Title", "Format", "Size", "ROM ID", "Version",
 	"Region", "CIC", "CRC1", "CRC2", "File Name",
 }
 
@@ -43,6 +43,7 @@ func toTableRecord(romfile rom.RomFile) []string {
 		romfile.File.Format,
 		fmt.Sprintf("%d", romfile.File.Size),
 		romfile.MediaFormat.Code + romfile.CartridgeId + romfile.Region.Code,
+		fmt.Sprintf("1.%d", romfile.Version),
 		romfile.Region.Description,
 		romfile.CIC,
 		romfile.CRC1,
