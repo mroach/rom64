@@ -84,7 +84,7 @@ type CodeDescription struct {
 type FileInfo struct {
 	Name   string `json:"name"`
 	Format string `json:"format"`
-	Size   string `json:"size"`
+	Size   int    `json:"size"`
 }
 
 type RomFile struct {
@@ -122,7 +122,7 @@ func FromFile(fh *os.File) (RomFile, error) {
 		return rominfo, err
 	}
 
-	rominfo.File.Size = formatRomSize(stat.Size())
+	rominfo.File.Size = romSize(stat.Size())
 	rominfo.File.Name = stat.Name()
 
 	return rominfo, err
@@ -190,11 +190,13 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 	return info, nil
 }
 
-func formatRomSize(size int64) string {
+// ROM sizes are standard and padded-out to be whole-numbers of MB
+// 8, 16, 32, 64 are common sizes
+func romSize(size int64) int {
 	const base float64 = 1024
 	fsize := float64(size)
 	exp := int(math.Log(fsize) / math.Log(base))
-	return fmt.Sprintf("%0.0f%c", (fsize / math.Pow(base, float64(exp))), "bKMG"[exp])
+	return int(fsize / math.Pow(base, float64(exp)))
 }
 
 func detectRomFormat(signature []byte) (string, error) {

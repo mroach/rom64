@@ -162,7 +162,7 @@ func infoToRecord(info rom.RomFile) []string {
 	return []string{
 		info.File.Name,
 		info.File.Format,
-		info.File.Size,
+		fmt.Sprintf("%d", info.File.Size),
 		info.ImageName,
 		info.MediaFormat.Code,
 		info.CartridgeId,
@@ -175,7 +175,7 @@ func infoToRecord(info rom.RomFile) []string {
 
 var textFormat = `File:
   Name:    %s
-  Size:    %s
+  Size:    %d MB
   Format:  %s
 
 Title:     %s
