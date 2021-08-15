@@ -82,6 +82,7 @@ type CodeDescription struct {
 }
 
 type FileInfo struct {
+	Path   string `json:"path"`
 	Name   string `json:"name"`
 	Format string `json:"format"`
 	Size   int    `json:"size"`
@@ -109,7 +110,13 @@ func FromPath(path string) (RomFile, error) {
 	}
 	defer f.Close()
 
-	return FromFile(f)
+	romfile, err := FromFile(f)
+	if err != nil {
+		return romfile, err
+	}
+
+	romfile.File.Path = path
+	return romfile, nil
 }
 
 func FromFile(fh *os.File) (RomFile, error) {
