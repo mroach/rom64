@@ -11,14 +11,15 @@ var textFormat = `File:
   Size:    %d MB
   Format:  %s
 
-Title:     %s
-ROM ID:    %s
-Media:     %s (%s)
-Version:   1.%d
-Region:    %s (%s)
-CIC:       %s
-CRC 1:     %s
-CRC 2:     %s
+ROM:
+  ID:        %s%s%s
+  Title:     %s
+  Media:     %s
+  Region:    %s
+  Version:   1.%d
+  CIC:       %s
+  CRC 1:     %s
+  CRC 2:     %s
 `
 
 func PrintText(info rom.RomFile) error {
@@ -26,11 +27,11 @@ func PrintText(info rom.RomFile) error {
 		info.File.Name,
 		info.File.Size,
 		info.File.Format,
+		info.MediaFormat.Code, info.CartridgeId, info.Region.Code,
 		info.ImageName,
-		info.CartridgeId,
-		info.MediaFormat.Code, info.MediaFormat.Description,
+		info.MediaFormat.Description,
+		info.Region.Description,
 		info.Version,
-		info.Region.Code, info.Region.Description,
 		info.CIC,
 		info.CRC1,
 		info.CRC2,
