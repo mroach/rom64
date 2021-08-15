@@ -22,7 +22,7 @@ func init() {
 				return err
 			}
 
-			return formatters.PrintAll([]rom.RomFile{info}, outputFormat)
+			return formatters.PrintOne(info, outputFormat)
 		},
 	}
 

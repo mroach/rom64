@@ -36,3 +36,20 @@ func PrintAll(items []rom.RomFile, outputFormat string) error {
 
 	return errors.New("Invalid output format " + outputFormat)
 }
+
+func PrintOne(item rom.RomFile, outputFormat string) error {
+	switch outputFormat {
+	case "csv":
+		return PrintCsv([]rom.RomFile{item}, ',')
+	case "tab":
+		return PrintCsv([]rom.RomFile{item}, '\t')
+	case "json":
+		return PrintJson(item)
+	case "table":
+		return PrintTable([]rom.RomFile{item})
+	case "text":
+		return PrintText(item)
+	}
+
+	return errors.New("Invalid output format " + outputFormat)
+}
