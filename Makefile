@@ -20,6 +20,7 @@ all: $(BUILD_DIR)/$(BIN_NAME)-linux-amd64 \
 	 $(BUILD_DIR)/$(BIN_NAME)-windows-amd64
 
 $(BUILD_DIR)/$(BIN_NAME)-%:
+	@test -d $(BUILD_DIR) || mkdir $(BUILD_DIR)
 	env GOOS=$(derived_os) GOARCH=$(derived_arch) go build -o $@ \
 		-ldflags "-X 'github.com/mroach/n64-go/version.BuildTime=$(BUILD_DATE)'" \
 		-ldflags "-X 'github.com/mroach/n64-go/version.Version=$(VERSION)'"
