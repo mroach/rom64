@@ -99,6 +99,7 @@ type RomFile struct {
 	Version     uint8           `json:"version"`
 	CIC         string          `json:"cic"`
 	File        FileInfo        `json:"file"`
+	VideoSystem string          `json:"video_system"`
 }
 
 func FromPath(path string) (RomFile, error) {
@@ -191,6 +192,7 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 			Code:        mediaFormatCode,
 			Description: MediaFormats[mediaFormatCode],
 		},
+		VideoSystem: regionToVideoSystem(regionCode),
 		File: FileInfo{
 			Format: romFormat,
 		},
@@ -235,4 +237,13 @@ func bytesToString(bytes []byte) string {
 	}
 
 	return string(chars)
+}
+
+func regionToVideoSystem(region string) string {
+	switch region {
+	case "A", "B", "E", "G", "K", "N", "J":
+		return "NTSC"
+	default:
+		return "PAL"
+	}
 }

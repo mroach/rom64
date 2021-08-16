@@ -17,6 +17,7 @@ ROM:
   Title:     %s
   Media:     %s
   Region:    %s
+  Video:     %s
   Version:   1.%d
   CIC:       %s
   CRC 1:     %s
@@ -33,6 +34,7 @@ func PrintText(info rom.RomFile) error {
 		info.ImageName,
 		info.MediaFormat.Description,
 		info.Region.Description,
+		info.VideoSystem,
 		info.Version,
 		info.CIC,
 		info.CRC1,

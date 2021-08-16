@@ -25,7 +25,7 @@ func PrintCsv(records []rom.RomFile, separator rune) error {
 var defaultCsvHeaders = []string{
 	"file_name", "file_format", "file_size",
 	"image_name", "media_format", "cartridge_id",
-	"region_name", "cic", "crc1", "crc2",
+	"region_name", "video_system", "cic", "crc1", "crc2",
 }
 
 func toCsvRecords(romfiles []rom.RomFile) [][]string {
@@ -46,6 +46,7 @@ func toCsvRecord(romfile rom.RomFile) []string {
 		romfile.MediaFormat.Code,
 		romfile.CartridgeId,
 		romfile.Region.Description,
+		romfile.VideoSystem,
 		romfile.CIC,
 		romfile.CRC1,
 		romfile.CRC2,
