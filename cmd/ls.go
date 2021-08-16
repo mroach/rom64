@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"sort"
+	"sync"
 
 	"github.com/mroach/n64-go/formatters"
 	"github.com/mroach/n64-go/rom"
@@ -29,20 +33,45 @@ func init() {
 				return nil
 			}
 
-			fileInfos := make([]rom.RomFile, 0)
-			for _, romPath := range files {
-				info, err := rom.FromPath(romPath)
-				if err != nil {
-					return err
-				}
+			results := make(chan rom.RomFile, len(files))
+			errs := make(chan error, len(files))
 
-				if includeMd5 {
-					if err := info.AddMD5(); err != nil {
-						return err
+			var wg sync.WaitGroup
+			for _, rompath := range files {
+				wg.Add(1)
+				go func(rompath string) {
+					defer wg.Done()
+					info, err := rom.FromPath(rompath)
+					if err != nil {
+						errs <- err
+						return
 					}
-				}
+					if includeMd5 {
+						if err := info.AddMD5(); err != nil {
+							errs <- err
+						}
+					}
+					results <- info
+				}(rompath)
+			}
+			wg.Wait()
+			close(errs)
+			close(results)
 
+			fileInfos := make([]rom.RomFile, 0)
+			for info := range results {
 				fileInfos = append(fileInfos, info)
+			}
+			sort.Slice(fileInfos, func(i, j int) bool {
+				return fileInfos[i].File.Name < fileInfos[j].File.Name
+			})
+
+			if len(errs) > 0 {
+				l := log.New(os.Stderr, "", 1)
+				l.Println("Some ROMs could not be read:")
+				for err := range errs {
+					l.Println(err)
+				}
 			}
 
 			return formatters.PrintAll(fileInfos, outputFormat)
