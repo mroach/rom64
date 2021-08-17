@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -26,7 +25,7 @@ func init() {
 
 			if !overwrite {
 				if _, err := os.Stat(outpath); err == nil {
-					return errors.New(outpath + " already exists")
+					return fmt.Errorf("Output file already exists: '%s'", outpath)
 				}
 			}
 

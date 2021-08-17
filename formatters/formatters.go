@@ -1,7 +1,6 @@
 package formatters
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -34,7 +33,7 @@ func PrintAll(items []rom.RomFile, outputFormat string) error {
 		return nil
 	}
 
-	return errors.New("Invalid output format " + outputFormat)
+	return fmt.Errorf("Invalid output format '%s'", outputFormat)
 }
 
 func PrintOne(item rom.RomFile, outputFormat string) error {
@@ -51,5 +50,5 @@ func PrintOne(item rom.RomFile, outputFormat string) error {
 		return PrintText(item)
 	}
 
-	return errors.New("Invalid output format " + outputFormat)
+	return fmt.Errorf("Invalid output format '%s'", outputFormat)
 }

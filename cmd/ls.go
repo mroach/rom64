@@ -29,8 +29,7 @@ func init() {
 			}
 
 			if len(files) == 0 {
-				fmt.Println("No ROM files found in", path)
-				return nil
+				return fmt.Errorf("No ROM files found in '%s'", path)
 			}
 
 			results := make(chan rom.RomFile, len(files))

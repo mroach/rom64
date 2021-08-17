@@ -3,7 +3,6 @@ package rom
 import (
 	"bytes"
 	"encoding/binary"
-	"errors"
 	"fmt"
 	"hash/crc32"
 	"io"
@@ -224,7 +223,7 @@ func detectRomFormat(signature []byte) (string, error) {
 		return "n64", nil
 	}
 
-	return "", errors.New("Unknown ROM format. Invalid file?")
+	return "", fmt.Errorf("Unknown ROM format. Invalid file?")
 }
 
 func bytesToString(bytes []byte) string {
