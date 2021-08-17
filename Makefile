@@ -1,11 +1,18 @@
 BIN_NAME := rom64
 BUILD_DIR := build
-BUILD_DATE := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
+BUILD_TIME := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION ?= $(shell git tag -l --sort=-creatordate 'v*' | head -n1)+$(shell git rev-parse --short HEAD)
+
+PKGNAME = github.com/mroach/n64-go
+SETVARS = '$(PKGNAME)/version.BuildTime=$(BUILD_TIME)' \
+		  '$(PKGNAME)/version.Version=$(VERSION)'
+
+LDFLAGS = $(addprefix -X , $(SETVARS))
 
 LOCAL_GOOS_ARCH := $(shell go version | cut -d' ' -f4 | tr '/' ' ')
 LOCAL_GOOS = $(firstword $(LOCAL_GOOS_ARCH))
 LOCAL_GOARCH = $(lastword $(LOCAL_GOOS_ARCH))
+
 
 dynamic_target = $(subst -, , $@)
 derived_os = $(word 2, $(dynamic_target))
@@ -21,9 +28,7 @@ all: $(BUILD_DIR)/$(BIN_NAME)-linux-amd64 \
 
 $(BUILD_DIR)/$(BIN_NAME)-%:
 	@test -d $(BUILD_DIR) || mkdir $(BUILD_DIR)
-	env GOOS=$(derived_os) GOARCH=$(derived_arch) go build -o $@ \
-		-ldflags "-X 'github.com/mroach/n64-go/version.BuildTime=$(BUILD_DATE)'" \
-		-ldflags "-X 'github.com/mroach/n64-go/version.Version=$(VERSION)'"
+	env GOOS=$(derived_os) GOARCH=$(derived_arch) go build -v -o $@ -ldflags "$(LDFLAGS)"
 
 clean:
 	rm $(BUILD_DIR)/$(BIN_NAME)-*
