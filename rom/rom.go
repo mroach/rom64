@@ -34,6 +34,12 @@ var MediaFormats = map[string]string{
 	"Z": "Aleck64 Cartridge",
 }
 
+var FileFormats = map[string]string{
+	"z64": "Big-endian",
+	"v64": "Byte-swapped",
+	"n64": "Little-endian",
+}
+
 var Regions = map[string]string{
 	"7": "Beta",
 	"A": "JP/US",
@@ -81,12 +87,12 @@ type CodeDescription struct {
 }
 
 type FileInfo struct {
-	Path   string `json:"path"`
-	Name   string `json:"name"`
-	Format string `json:"format"`
-	Size   int    `json:"size"`
-	MD5    string `json:"md5"`
-	SHA1   string `json:"sha1"`
+	Path   string          `json:"path"`
+	Name   string          `json:"name"`
+	Format CodeDescription `json:"format"`
+	Size   int             `json:"size"`
+	MD5    string          `json:"md5"`
+	SHA1   string          `json:"sha1"`
 }
 
 type RomFile struct {
@@ -194,7 +200,10 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 		},
 		VideoSystem: regionToVideoSystem(regionCode),
 		File: FileInfo{
-			Format: romFormat,
+			Format: CodeDescription{
+				Code:        romFormat,
+				Description: FileFormats[romFormat],
+			},
 		},
 	}
 
