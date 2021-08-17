@@ -11,6 +11,7 @@ var textFormat = `File:
   Size:    %d MB
   Format:  %s
   MD5:     %s
+  SHA1:    %s
 
 ROM:
   ID:        %s%s%s
@@ -30,6 +31,7 @@ func PrintText(info rom.RomFile) error {
 		info.File.Size,
 		info.File.Format,
 		info.File.MD5,
+		info.File.SHA1,
 		info.MediaFormat.Code, info.CartridgeId, info.Region.Code,
 		info.ImageName,
 		info.MediaFormat.Description,

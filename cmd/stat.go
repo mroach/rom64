@@ -22,7 +22,20 @@ func init() {
 				return err
 			}
 
-			if err := info.AddMD5(); err != nil {
+			md5res := make(chan error)
+			sha1res := make(chan error)
+
+			go func(errs chan error) {
+				errs <- info.AddMD5()
+			}(md5res)
+			go func(errs chan error) {
+				errs <- info.AddSHA1()
+			}(sha1res)
+
+			if err := <-md5res; err != nil {
+				return err
+			}
+			if err := <-sha1res; err != nil {
 				return err
 			}
 

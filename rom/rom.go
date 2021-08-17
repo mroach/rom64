@@ -87,6 +87,7 @@ type FileInfo struct {
 	Format string `json:"format"`
 	Size   int    `json:"size"`
 	MD5    string `json:"md5"`
+	SHA1   string `json:"sha1"`
 }
 
 type RomFile struct {
