@@ -5,7 +5,8 @@ VERSION ?= $(shell git tag -l --sort=-creatordate 'v*' | head -n1)+$(shell git r
 
 PKGNAME = github.com/mroach/n64-go
 SETVARS = '$(PKGNAME)/version.BuildTime=$(BUILD_TIME)' \
-		  '$(PKGNAME)/version.Version=$(VERSION)'
+		  '$(PKGNAME)/version.Version=$(VERSION)' \
+		  '$(PKGNAME)/cmd.binName=$(BIN_NAME)'
 
 LDFLAGS = $(addprefix -X , $(SETVARS))
 

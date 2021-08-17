@@ -1,16 +1,21 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:          "n64",
-	Short:        "Nintendo 64 utility",
-	SilenceUsage: true,
-	Run: func(cmd *cobra.Command, args []string) {
+var binName string = "rom64"
 
+var rootCmd = &cobra.Command{
+	Use:          binName,
+	Short:        "Nintendo 64 ROM utility",
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		_, err := fmt.Println("Use the 'help' command to learn about this application.")
+		return err
 	},
 }
 
