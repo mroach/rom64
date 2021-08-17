@@ -11,9 +11,9 @@ import (
 	"strings"
 )
 
-var headerZ64 = []byte{0x80, 0x37, 0x12, 0x40}
-var headerV64 = []byte{0x37, 0x80, 0x40, 0x12}
-var headerN64 = []byte{0x40, 0x12, 0x37, 0x80}
+var bomZ64 = []byte{0x80, 0x37, 0x12, 0x40}
+var bomV64 = []byte{0x37, 0x80, 0x40, 0x12}
+var bomN64 = []byte{0x40, 0x12, 0x37, 0x80}
 
 var bootcodeChecksumToCIC = map[uint32]string{
 	0x587BD543: "5101",
@@ -211,15 +211,15 @@ func romSize(size int64) int {
 }
 
 func detectRomFormat(signature []byte) (string, error) {
-	if bytes.Equal(signature, headerZ64) {
+	if bytes.Equal(signature, bomZ64) {
 		return "z64", nil
 	}
 
-	if bytes.Equal(signature, headerV64) {
+	if bytes.Equal(signature, bomV64) {
 		return "v64", nil
 	}
 
-	if bytes.Equal(signature, headerN64) {
+	if bytes.Equal(signature, bomN64) {
 		return "n64", nil
 	}
 
