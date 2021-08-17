@@ -9,7 +9,7 @@ import (
 var textFormat = `File:
   Name:    %s
   Size:    %d MB
-  Format:  %s
+  Format:  %s (%s)
   MD5:     %s
   SHA1:    %s
 
@@ -29,7 +29,7 @@ func PrintText(info rom.RomFile) error {
 	_, err := fmt.Printf(textFormat,
 		info.File.Name,
 		info.File.Size,
-		info.File.Format,
+		info.File.Format.Code, info.File.Format.Description,
 		info.File.MD5,
 		info.File.SHA1,
 		info.MediaFormat.Code, info.CartridgeId, info.Region.Code,
