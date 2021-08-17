@@ -7,16 +7,27 @@ import (
 	"github.com/mroach/n64-go/rom"
 )
 
-func PrintAll(items []rom.RomFile, outputFormat string) error {
+func DefaultColumns(outputFormat string) []string {
+	switch outputFormat {
+	case "csv", "tab":
+		return DefaultCsvColumns
+	case "table":
+		return DefaultTableColumns
+	}
+
+	return make([]string, 0)
+}
+
+func PrintAll(items []rom.RomFile, outputFormat string, columns []string) error {
 	switch outputFormat {
 	case "csv":
-		return PrintCsv(items, ',')
+		return PrintCsv(items, ',', columns)
 	case "tab":
-		return PrintCsv(items, '\t')
+		return PrintCsv(items, '\t', columns)
 	case "json":
 		return PrintJson(items)
 	case "table":
-		return PrintTable(items)
+		return PrintTable(items, columns)
 	case "text":
 		hr := strings.Repeat("-", 80)
 		count := len(items)
@@ -36,16 +47,16 @@ func PrintAll(items []rom.RomFile, outputFormat string) error {
 	return fmt.Errorf("Invalid output format '%s'", outputFormat)
 }
 
-func PrintOne(item rom.RomFile, outputFormat string) error {
+func PrintOne(item rom.RomFile, outputFormat string, columns []string) error {
 	switch outputFormat {
 	case "csv":
-		return PrintCsv([]rom.RomFile{item}, ',')
+		return PrintCsv([]rom.RomFile{item}, ',', columns)
 	case "tab":
-		return PrintCsv([]rom.RomFile{item}, '\t')
+		return PrintCsv([]rom.RomFile{item}, '\t', columns)
 	case "json":
 		return PrintJson(item)
 	case "table":
-		return PrintTable([]rom.RomFile{item})
+		return PrintTable([]rom.RomFile{item}, columns)
 	case "text":
 		return PrintText(item)
 	}

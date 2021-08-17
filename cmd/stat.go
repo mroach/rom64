@@ -8,6 +8,7 @@ import (
 
 func init() {
 	var outputFormat string
+	var columns []string
 
 	var statCmd = &cobra.Command{
 		Use:     "stat",
@@ -19,6 +20,16 @@ func init() {
 
 			info, err := rom.FromPath(path)
 			if err != nil {
+				return err
+			}
+
+			if len(columns) == 0 {
+				columns = formatters.DefaultColumns(outputFormat)
+			}
+
+			columns, err := validateColumns(columns)
+			if err != nil {
+				printColumnHelp()
 				return err
 			}
 
@@ -39,11 +50,12 @@ func init() {
 				return err
 			}
 
-			return formatters.PrintOne(info, outputFormat)
+			return formatters.PrintOne(info, outputFormat, columns)
 		},
 	}
 
 	statCmd.Flags().StringVarP(&outputFormat, "output", "o", "text", "Output format")
+	statCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
 	rootCmd.AddCommand(statCmd)
 }

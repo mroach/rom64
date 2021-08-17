@@ -14,7 +14,9 @@ import (
 
 func init() {
 	var outputFormat string
-	var includeMd5 bool
+	var columns []string
+	calcMd5 := false
+	calcSha := false
 
 	var lsCmd = &cobra.Command{
 		Use:     "ls",
@@ -32,6 +34,25 @@ func init() {
 				return fmt.Errorf("No ROM files found in '%s'", path)
 			}
 
+			if len(columns) == 0 {
+				columns = formatters.DefaultColumns(outputFormat)
+			}
+
+			columns, err := validateColumns(columns)
+			if err != nil {
+				printColumnHelp()
+				return err
+			}
+
+			for _, column := range columns {
+				if column == "md5" {
+					calcMd5 = true
+				}
+				if column == "sha1" {
+					calcSha = true
+				}
+			}
+
 			results := make(chan rom.RomFile, len(files))
 			errs := make(chan error, len(files))
 
@@ -45,8 +66,13 @@ func init() {
 						errs <- err
 						return
 					}
-					if includeMd5 {
+					if calcMd5 {
 						if err := info.AddMD5(); err != nil {
+							errs <- err
+						}
+					}
+					if calcSha {
+						if err := info.AddSHA1(); err != nil {
 							errs <- err
 						}
 					}
@@ -73,12 +99,12 @@ func init() {
 				}
 			}
 
-			return formatters.PrintAll(fileInfos, outputFormat)
+			return formatters.PrintAll(fileInfos, outputFormat, columns)
 		},
 	}
 
 	lsCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format")
-	lsCmd.Flags().BoolVarP(&includeMd5, "with-md5", "m", false, "Calculate MD5 hash")
+	lsCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
 	rootCmd.AddCommand(lsCmd)
 }

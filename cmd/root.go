@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/mroach/n64-go/formatters"
 	"github.com/spf13/cobra"
 )
 
@@ -23,4 +25,19 @@ func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
+}
+
+func validateColumns(columns []string) ([]string, error) {
+	columns, invalidCols := formatters.ValidateColumnIds(columns)
+	if len(invalidCols) > 0 {
+		return columns, fmt.Errorf("Invalid columns: %s", strings.Join(invalidCols, ", "))
+	}
+
+	return columns, nil
+}
+
+func printColumnHelp() {
+	fmt.Println("Available columns:")
+	fmt.Println(formatters.ColumnHelp())
+	fmt.Println()
 }
