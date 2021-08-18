@@ -16,7 +16,7 @@ func ConvertRomFormat(inpath string, outpath string) error {
 
 	fileFormat := info.File.Format.Code
 
-	if fileFormat == "z64" {
+	if fileFormat == FormatZ64 {
 		return errors.New("File is already in the native Z64 format")
 	}
 
@@ -50,11 +50,11 @@ func ConvertRomFormat(inpath string, outpath string) error {
 }
 
 func maybeReverseBytes(bytes []byte, romFormat string) []byte {
-	if romFormat == "v64" {
+	if romFormat == FormatV64 {
 		return reverseBytes(bytes, 2)
 	}
 
-	if romFormat == "n64" {
+	if romFormat == FormatN64 {
 		return reverseBytes(bytes, 4)
 	}
 

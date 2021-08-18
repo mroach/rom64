@@ -11,6 +11,12 @@ import (
 	"strings"
 )
 
+const (
+	FormatZ64 = "z64"
+	FormatV64 = "v64"
+	FormatN64 = "n64"
+)
+
 var bomZ64 = []byte{0x80, 0x37, 0x12, 0x40}
 var bomV64 = []byte{0x37, 0x80, 0x40, 0x12}
 var bomN64 = []byte{0x40, 0x12, 0x37, 0x80}
@@ -35,9 +41,9 @@ var MediaFormats = map[string]string{
 }
 
 var FileFormats = map[string]string{
-	"z64": "Big-endian",
-	"v64": "Byte-swapped",
-	"n64": "Little-endian",
+	FormatZ64: "Big-endian",
+	FormatV64: "Byte-swapped",
+	FormatN64: "Little-endian",
 }
 
 var Regions = map[string]string{
@@ -226,15 +232,15 @@ func romSize(size int64) int {
 
 func detectRomFormat(signature []byte) (string, error) {
 	if bytes.Equal(signature, bomZ64) {
-		return "z64", nil
+		return FormatZ64, nil
 	}
 
 	if bytes.Equal(signature, bomV64) {
-		return "v64", nil
+		return FormatV64, nil
 	}
 
 	if bytes.Equal(signature, bomN64) {
-		return "n64", nil
+		return FormatN64, nil
 	}
 
 	return "", fmt.Errorf("Unknown ROM format. Invalid file?")
