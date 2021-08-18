@@ -17,6 +17,11 @@ const (
 	FormatN64 = "n64"
 )
 
+const (
+	NTSC = "NTSC"
+	PAL  = "PAL"
+)
+
 var bomZ64 = []byte{0x80, 0x37, 0x12, 0x40}
 var bomV64 = []byte{0x37, 0x80, 0x40, 0x12}
 var bomN64 = []byte{0x40, 0x12, 0x37, 0x80}
@@ -46,27 +51,34 @@ var FileFormats = map[string]string{
 	FormatN64: "Little-endian",
 }
 
-var Regions = map[string]string{
-	"7": "Beta",
-	"A": "JP/US",
-	"B": "BR",
-	"C": "CN",
-	"D": "DE",
-	"E": "US",
-	"F": "FR",
-	"G": "Gateway 64 (NTSC)",
-	"H": "NL",
-	"I": "IT",
-	"J": "JP",
-	"K": "KR",
-	"L": "Gateway 64 (PAL)",
-	"N": "CA",
-	"P": "EU",
-	"S": "ES",
-	"U": "AU",
-	"W": "NORDIC",
-	"X": "EU",
-	"Y": "EU",
+type Region struct {
+	Id          string `json:"id"`
+	Short       string `json:"short_name"`
+	Description string `json:"description"`
+	VideoSystem string `json:"video_system"`
+}
+
+var Regions = map[string]Region{
+	"7": {"7", "Beta", "Beta", NTSC},
+	"A": {"A", "JP/US", "Japan and USA", NTSC},
+	"B": {"B", "BRA", "Brazil", NTSC},
+	"C": {"C", "CHN", "China", PAL},
+	"D": {"D", "GER", "Germany", PAL},
+	"E": {"E", "USA", "USA", NTSC},
+	"F": {"F", "FRA", "France", PAL},
+	"G": {"G", "GW64-N", "Gateway 64 (NTSC)", NTSC},
+	"H": {"H", "NED", "Netherlands", PAL},
+	"I": {"I", "ITA", "Italy", PAL},
+	"J": {"J", "JPN", "Japan", NTSC},
+	"K": {"K", "KOR", "South Korea", NTSC},
+	"L": {"L", "GW64-P", "Gateway 64 (PAL)", PAL},
+	"N": {"N", "CAN", "Canada", NTSC},
+	"P": {"P", "EUR", "Europe", PAL},
+	"S": {"S", "ESP", "Spain", PAL},
+	"U": {"U", "AUS", "Australia", PAL},
+	"W": {"W", "NORD", "Scandinavia", PAL},
+	"X": {"X", "PAL/X", "PAL Regions", PAL},
+	"Y": {"Y", "PAL/Y", "PAL Regions", PAL},
 }
 
 // The first 4 bytes of a ROM are used for endianness detection and will already
@@ -107,16 +119,15 @@ type RomFile struct {
 	ImageName   string          `json:"image_name"`
 	MediaFormat CodeDescription `json:"media_format"`
 	CartridgeId string          `json:"cartridge_id"`
-	Region      CodeDescription `json:"region"`
+	Region      Region          `json:"region"`
 	Version     uint8           `json:"version"`
 	CIC         string          `json:"cic"`
 	File        FileInfo        `json:"file"`
-	VideoSystem string          `json:"video_system"`
 }
 
 // 4-char ROM identifier, e.g. NSME = Super Mario 64 (USA), NSMJ = Super Mario 64 (Japan)
 func (r *RomFile) Serial() string {
-	return r.MediaFormat.Code + r.CartridgeId + r.Region.Code
+	return r.MediaFormat.Code + r.CartridgeId + r.Region.Id
 }
 
 func FromPath(path string) (RomFile, error) {
@@ -201,15 +212,11 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 		CRC1:        fmt.Sprintf("%08X", header.CRC1),
 		CRC2:        fmt.Sprintf("%08X", header.CRC2),
 		Version:     header.Version,
-		Region: CodeDescription{
-			Code:        regionCode,
-			Description: Regions[regionCode],
-		},
+		Region:      Regions[regionCode],
 		MediaFormat: CodeDescription{
 			Code:        mediaFormatCode,
 			Description: MediaFormats[mediaFormatCode],
 		},
-		VideoSystem: regionToVideoSystem(regionCode),
 		File: FileInfo{
 			Format: CodeDescription{
 				Code:        romFormat,
@@ -257,13 +264,4 @@ func bytesToString(bytes []byte) string {
 	}
 
 	return string(chars)
-}
-
-func regionToVideoSystem(region string) string {
-	switch region {
-	case "A", "B", "E", "G", "K", "N", "J":
-		return "NTSC"
-	default:
-		return "PAL"
-	}
 }

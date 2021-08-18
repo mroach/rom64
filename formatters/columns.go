@@ -70,10 +70,15 @@ var Columns = map[string]Column{
 		"Region description of the ROM derived from the ROM ID.",
 		func(r rom.RomFile) string { return r.Region.Description },
 	},
+	"region_short": {
+		"Region",
+		"Region short code",
+		func(r rom.RomFile) string { return r.Region.Short },
+	},
 	"video_system": {
 		"Video",
 		"Video system derived from the ROM region. NTSC or PAL.",
-		func(r rom.RomFile) string { return r.VideoSystem },
+		func(r rom.RomFile) string { return r.Region.VideoSystem },
 	},
 	"cic": {
 		"CIC",
