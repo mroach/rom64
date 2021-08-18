@@ -52,3 +52,24 @@ func (romfile *RomFile) AddSHA1() error {
 	romfile.File.SHA1 = sha1hex
 	return nil
 }
+
+func (romfile *RomFile) AddHashes() error {
+	md5res := make(chan error)
+	sha1res := make(chan error)
+
+	go func(errs chan error) {
+		errs <- romfile.AddMD5()
+	}(md5res)
+	go func(errs chan error) {
+		errs <- romfile.AddSHA1()
+	}(sha1res)
+
+	if err := <-md5res; err != nil {
+		return err
+	}
+	if err := <-sha1res; err != nil {
+		return err
+	}
+
+	return nil
+}
