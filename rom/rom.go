@@ -108,6 +108,11 @@ type RomFile struct {
 	VideoSystem string          `json:"video_system"`
 }
 
+// 4-char ROM identifier, e.g. NSME = Super Mario 64 (USA), NSMJ = Super Mario 64 (Japan)
+func (r *RomFile) Serial() string {
+	return r.MediaFormat.Code + r.CartridgeId + r.Region.Code
+}
+
 func FromPath(path string) (RomFile, error) {
 	var info RomFile
 

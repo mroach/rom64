@@ -93,9 +93,7 @@ var Columns = map[string]Column{
 	"rom_id": {
 		"Rom ID",
 		"ROM ID / serial. example: NSME for Super Mario 64 (USA)",
-		func(r rom.RomFile) string {
-			return r.MediaFormat.Code + r.CartridgeId + r.Region.Code
-		},
+		func(r rom.RomFile) string { return r.Serial() },
 	},
 }
 
