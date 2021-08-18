@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Converts a ROM to native Z64 format
 func ConvertRomFormat(inpath string, outpath string) error {
 	const bufferSize = 2048
 
@@ -24,11 +25,13 @@ func ConvertRomFormat(inpath string, outpath string) error {
 	if err != nil {
 		return err
 	}
+	defer source.Close()
 
 	dest, err := os.Create(outpath)
 	if err != nil {
 		return err
 	}
+	defer dest.Close()
 
 	for {
 		buf := make([]byte, bufferSize)
