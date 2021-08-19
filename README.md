@@ -29,6 +29,7 @@ ROM file headers are parsed to detect information:
 * [ls](#rom64-ls)
 * [stat](#rom64-stat)
 * [convert](#rom64-convert)
+* [validate](#rom64-validate)
 
 ### `rom64 ls`
 
@@ -175,3 +176,25 @@ Same ROM but with `--output json`
 ## `rom64 convert`
 
 Converts a ROM from a non-native format to the native big-endian Z64 format.
+
+After conversion, the new ROM's SHA-1 checksum is validated against a known
+list of good checksums, same as in the `validate` command.
+
+
+## `rom64 validate`
+
+Computes the ROM file's SHA-1 checksum and validates it against a list of known-good
+checksums from a "datfile".
+
+Checksums only work on files in the native Big-endian (Z64) format.
+
+The binary includes a recent version of the datile from [dat-o-matic].
+If you want to use your own, specify it with the `--datfile` flag.
+
+```
+$ rom64 validate ~/Downloads/n64/Tsumi\ to\ Batsu\ -\ Hoshi\ no\ Keishousha\ \(Japan\).z64
+Found 1 datfile entries for ROM serial 'NGUJ'
+  SHA-1 MATCH  581297B9D5C3A4C33169AE0AAE218C742CD9CBCF Tsumi to Batsu - Hoshi no Keishousha (Japan).z64
+```
+
+[dat-o-matic]: https://datomatic.no-intro.org/index.php?page=download&s=24&op=dat
