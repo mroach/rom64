@@ -27,7 +27,7 @@ ROM file headers are parsed to detect information:
 ## Commands
 
 * [ls](#rom64-ls)
-* [stat](#rom64-stat)
+* [info](#rom64-info)
 * [convert](#rom64-convert)
 * [validate](#rom64-validate)
 
@@ -113,14 +113,14 @@ rom64 ls ~/Downloads/n64 -c image_name,file_format_desc,rom_id,region,video_syst
 +----------------------+--------------+--------+--------+-------+------+-----------+----------------------------------+-----------------------------------------------------------+
 ```
 
-## `rom64 stat`
+## `rom64 info`
 
 Show information about a single file.
 
 Also supports the same output options as `ls`
 
 ```
-rom64 stat ~/Downloads/n64/Conker\'s\ Bad\ Fur\ Day\ \(USA\).z64
+rom64 info ~/Downloads/n64/Conker\'s\ Bad\ Fur\ Day\ \(USA\).z64
 File:
   Name:    Conker's Bad Fur Day (USA).z64
   Size:    64 MB

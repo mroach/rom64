@@ -10,8 +10,8 @@ func init() {
 	var outputFormat string
 	var columns []string
 
-	var statCmd = &cobra.Command{
-		Use:     "stat",
+	var infoCmd = &cobra.Command{
+		Use:     "info",
 		Aliases: []string{"info"},
 		Short:   "Get ROM file information",
 		Args:    cobra.MinimumNArgs(1),
@@ -42,8 +42,8 @@ func init() {
 		},
 	}
 
-	statCmd.Flags().StringVarP(&outputFormat, "output", "o", "text", "Output format")
-	statCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
+	infoCmd.Flags().StringVarP(&outputFormat, "output", "o", "text", "Output format")
+	infoCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
-	rootCmd.AddCommand(statCmd)
+	rootCmd.AddCommand(infoCmd)
 }
