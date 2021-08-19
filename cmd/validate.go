@@ -65,7 +65,7 @@ func init() {
 
 func loadDatfile() (dat.DatFile, error) {
 	if datFilePath == "" {
-		return dat.IncludedDat, nil
+		return dat.ReadFromIncluded()
 	} else {
 		return dat.ReadFromFile(datFilePath)
 	}

@@ -1,32 +1,15 @@
 package dat
 
 import (
+	_ "embed"
 	"encoding/xml"
 	"io"
 	"os"
 	"strings"
 )
 
-// Reading and parsing the file at build time reduces the binary size and eliminates
-// duplicate parsing work at runtime if we were to embed the plain text file with go:embed
-var IncludedDat = func() DatFile {
-	f, err := os.Open("dat/roms.dat.xml")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	bytes, err := io.ReadAll(f)
-	if err != nil {
-		panic(err)
-	}
-
-	df, err := Read(bytes)
-	if err != nil {
-		panic(err)
-	}
-	return df
-}()
+//go:embed roms.dat.xml
+var embeddedDatFile []byte
 
 type DatFile struct {
 	Name    string `xml:"header>name"`
@@ -42,6 +25,14 @@ type Rom struct {
 	MD5    string `xml:"md5,attr"`
 	SHA1   string `xml:"sha1,attr"`
 	Status string `xml:"status"`
+}
+
+func ReadFromIncluded() (df DatFile, err error) {
+	df, err = Read(embeddedDatFile)
+	if err != nil {
+		return df, err
+	}
+	return df, nil
 }
 
 // Read a DatFile from an XML datfile on disk
