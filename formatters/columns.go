@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mroach/n64-go/rom"
+	"github.com/mroach/rom64/rom"
 )
 
 type columnValue func(rom.RomFile) string

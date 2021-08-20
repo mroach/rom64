@@ -3,7 +3,7 @@ package formatters
 import (
 	"os"
 
-	"github.com/mroach/n64-go/rom"
+	"github.com/mroach/rom64/rom"
 	"github.com/olekukonko/tablewriter"
 )
 

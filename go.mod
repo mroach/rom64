@@ -1,4 +1,4 @@
-module github.com/mroach/n64-go
+module github.com/mroach/rom64
 
 go 1.16
 

@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/mroach/n64-go/formatters"
-	"github.com/mroach/n64-go/rom"
+	"github.com/mroach/rom64/formatters"
+	"github.com/mroach/rom64/rom"
 	"github.com/spf13/cobra"
 )
 

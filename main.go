@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mroach/n64-go/cmd"
+	"github.com/mroach/rom64/cmd"
 )
 
 func main() {

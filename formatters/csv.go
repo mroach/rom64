@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"os"
 
-	"github.com/mroach/n64-go/rom"
+	"github.com/mroach/rom64/rom"
 )
 
 func PrintCsv(records []rom.RomFile, separator rune, column_ids []string) error {

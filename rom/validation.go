@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mroach/n64-go/dat"
+	"github.com/mroach/rom64/dat"
 )
 
 func (r *RomFile) ValidateWithDat(df dat.DatFile) (matches, mismatches []dat.Rom, err error) {

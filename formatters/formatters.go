@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mroach/n64-go/rom"
+	"github.com/mroach/rom64/rom"
 )
 
 func DefaultColumns(outputFormat string) []string {

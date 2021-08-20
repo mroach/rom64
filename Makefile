@@ -3,7 +3,7 @@ BUILD_DIR := build
 BUILD_TIME := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION ?= $(shell git tag -l --sort=-creatordate 'v*' | head -n1)+$(shell git rev-parse --short HEAD)
 
-PKGNAME = github.com/mroach/n64-go
+PKGNAME = github.com/mroach/rom64
 SETVARS = '$(PKGNAME)/version.BuildTime=$(BUILD_TIME)' \
 		  '$(PKGNAME)/version.Version=$(VERSION)' \
 		  '$(PKGNAME)/cmd.binName=$(BIN_NAME)'

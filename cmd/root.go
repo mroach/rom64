@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mroach/n64-go/formatters"
+	"github.com/mroach/rom64/formatters"
 	"github.com/spf13/cobra"
 )
 

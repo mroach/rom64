@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/mroach/n64-go/version"
+	"github.com/mroach/rom64/version"
 	"github.com/spf13/cobra"
 )
 
