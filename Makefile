@@ -32,9 +32,10 @@ $(BUILD_DIR)/$(BIN_NAME)-%:
 	env GOOS=$(derived_os) GOARCH=$(derived_arch) go build -v -o $@ -ldflags "$(LDFLAGS)"
 
 clean:
-	rm $(BUILD_DIR)/$(BIN_NAME)-*
+	rm -f $(BUILD_DIR)/$(BIN_NAME)-*
 
-fresh: clean all
+fresh: clean
+	$(MAKE) all
 
 install:
 	cp build/$(BIN_NAME)-$(LOCAL_GOOS)-$(LOCAL_GOARCH) $(HOME)/bin/$(BIN_NAME)
