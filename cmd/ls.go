@@ -46,10 +46,10 @@ func init() {
 			}
 
 			for _, column := range columns {
-				if column == "md5" {
+				if column == "file_md5" {
 					calcMd5 = true
 				}
-				if column == "sha1" {
+				if column == "file_sha1" {
 					calcSha = true
 				}
 			}

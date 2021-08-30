@@ -30,19 +30,19 @@ List ROM files in a given directory. By default, output is in a human-readable t
 | crc2             | CRC2 checksum of ROM internals. Also known as 'CRC LO'           |
 | file_format      | File format code. One of: z64, v64, n64                          |
 | file_format_desc | File format description. example: Big-endian                     |
+| file_md5         | MD5 hash/checksum of the file on disk. Lower-case hexadecimal.   |
 | file_name        | File name on disk                                                |
+| file_sha1        | SHA-1 hash/checksum of the file on disk. Lower-case hexadecimal. |
 | file_size_mbits  | File size in megabits. Always a whole number. example: 256       |
 | file_size_mbytes | File size in megabytes. Always a whole number. example: 32       |
 | image_name       | Image name / game title embedded in the ROM.                     |
-| md5              | MD5 hash/checksum of the file on disk. Lower-case hexadecimal.   |
 | region           | Region description of the ROM derived from the ROM ID.           |
 | rom_id           | ROM ID / serial. example: NSME for Super Mario 64 (USA)          |
-| sha1             | SHA-1 hash/checksum of the file on disk. Lower-case hexadecimal. |
 | version          | Version of the ROM. One of: 1.0, 1.1, 1.2, or 1.3.               |
 | video_system     | Video system derived from the ROM region. NTSC or PAL.           |
 
 ```
-$ rom64 ls ~/Downloads/n64 -c image_name,file_format_desc,rom_id,region,video_system,cic,file_size_mbits,md5,file_name
+$ rom64 ls ~/Downloads/n64 -c image_name,file_format_desc,rom_id,region,video_system,cic,file_size_mbits,file_md5,file_name
 +----------------------+--------------+--------+--------+-------+------+-----------+----------------------------------+-----------------------------------------------------------+
 |      Image Name      | File Format  | Rom ID | Region | Video | CIC  | Size (Mb) |               MD5                |                         File Name                         |
 +----------------------+--------------+--------+--------+-------+------+-----------+----------------------------------+-----------------------------------------------------------+

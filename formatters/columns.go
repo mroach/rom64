@@ -45,12 +45,12 @@ var Columns = map[string]Column{
 		"File size in megabits. Always a whole number. example: 256",
 		func(r rom.RomFile) string { return fmt.Sprintf("%d", r.File.Size*8) },
 	},
-	"md5": {
+	"file_md5": {
 		"MD5",
 		"MD5 hash/checksum of the file on disk. Lower-case hexadecimal.",
 		func(r rom.RomFile) string { return r.File.MD5 },
 	},
-	"sha1": {
+	"file_sha1": {
 		"SHA1",
 		"SHA-1 hash/checksum of the file on disk. Lower-case hexadecimal.",
 		func(r rom.RomFile) string { return r.File.SHA1 },
