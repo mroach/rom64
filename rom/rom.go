@@ -22,6 +22,8 @@ const (
 	PAL  = "PAL"
 )
 
+const ROM_HEADER_SIZE = 0x40
+
 var bomZ64 = []byte{0x80, 0x37, 0x12, 0x40}
 var bomV64 = []byte{0x37, 0x80, 0x40, 0x12}
 var bomN64 = []byte{0x40, 0x12, 0x37, 0x80}
@@ -181,7 +183,7 @@ func FromIoReader(r io.Reader) (RomFile, error) {
 		return info, err
 	}
 
-	headerBytes := make([]byte, 0x40-len(endiannessSignature))
+	headerBytes := make([]byte, ROM_HEADER_SIZE-len(endiannessSignature))
 	err = binary.Read(r, binary.BigEndian, headerBytes)
 	if err != nil {
 		return info, err
