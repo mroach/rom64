@@ -1,47 +1,33 @@
 package formatters
 
 import (
-	"fmt"
+	"os"
+	"text/template"
 
 	"github.com/mroach/rom64/rom"
 )
 
 var textFormat = `File:
-  Name:    %s
-  Size:    %d MB
-  Format:  %s (%s)
-  MD5:     %s
-  SHA1:    %s
+  Name:    {{.File.Name}}
+  Size:    {{.File.Size}} MB
+  Format:  {{.File.Format.Code}} ({{.File.Format.Description}})
+  Checksums:
+    MD5:     {{if .File.MD5}}{{.File.MD5}}{{else}}Not Calculated{{end}}
+    SHA1:    {{if .File.SHA1}}{{.File.SHA1}}{{else}}Not Calculated{{end}}
 
 ROM:
-  ID:        %s
-  Title:     %s
-  Media:     %s
-  Region:    %s
-  Video:     %s
-  Version:   1.%d
-  CIC:       %s
-  CRC 1:     %s
-  CRC 2:     %s
+  ID:        {{.Serial}}
+  Title:     {{.ImageName}}
+  Media:     {{.MediaFormat.Description}}
+  Region:    {{.Region.Description}}
+  Video:     {{.Region.VideoSystem}}
+  Version:   1.{{.Version}}
+  CIC:       {{.CIC}}
+  CRC 1:     {{.CRC1}}
+  CRC 2:     {{.CRC2}}
 `
 
 func PrintText(info rom.RomFile) error {
-	_, err := fmt.Printf(textFormat,
-		info.File.Name,
-		info.File.Size,
-		info.File.Format.Code, info.File.Format.Description,
-		info.File.MD5,
-		info.File.SHA1,
-		info.Serial(),
-		info.ImageName,
-		info.MediaFormat.Description,
-		info.Region.Description,
-		info.Region.VideoSystem,
-		info.Version,
-		info.CIC,
-		info.CRC1,
-		info.CRC2,
-	)
-
-	return err
+	var defaultTextTemplate = template.Must(template.New("rom").Parse(textFormat))
+	return defaultTextTemplate.Execute(os.Stdout, &info)
 }
