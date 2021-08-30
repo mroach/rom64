@@ -7,7 +7,7 @@ import (
 	"github.com/mroach/rom64/rom"
 )
 
-var OutputFormats = []string{"csv", "tab", "json", "table", "text"}
+var OutputFormats = []string{"csv", "tab", "json", "table", "text", "xml"}
 
 func DefaultColumns(outputFormat string) []string {
 	switch outputFormat {
@@ -44,6 +44,8 @@ func PrintAll(items []rom.RomFile, outputFormat string, columns []string) error 
 		}
 
 		return nil
+	case "xml":
+		return PrintXml(items)
 	}
 
 	return fmt.Errorf("Invalid output format '%s'", outputFormat)
@@ -61,6 +63,8 @@ func PrintOne(item rom.RomFile, outputFormat string, columns []string) error {
 		return PrintTable([]rom.RomFile{item}, columns)
 	case "text":
 		return PrintText(item)
+	case "xml":
+		return PrintXml([]rom.RomFile{item})
 	}
 
 	return fmt.Errorf("Invalid output format '%s'", outputFormat)

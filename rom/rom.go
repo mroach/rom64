@@ -105,24 +105,24 @@ type CodeDescription struct {
 }
 
 type FileInfo struct {
-	Path   string          `json:"path"`
-	Name   string          `json:"name"`
-	Format CodeDescription `json:"format"`
-	Size   int             `json:"size"`
-	MD5    string          `json:"md5"`
-	SHA1   string          `json:"sha1"`
+	Path   string          `json:"path" xml:"path"`
+	Name   string          `json:"name" xml:"name"`
+	Format CodeDescription `json:"format" xml:"format"`
+	Size   int             `json:"size" xml:"size"`
+	MD5    string          `json:"md5" xml:"md5"`
+	SHA1   string          `json:"sha1" xml:"sha1"`
 }
 
 type RomFile struct {
-	CRC1        string          `json:"crc_1"`
-	CRC2        string          `json:"crc_2"`
-	ImageName   string          `json:"image_name"`
-	MediaFormat CodeDescription `json:"media_format"`
-	CartridgeId string          `json:"cartridge_id"`
-	Region      Region          `json:"region"`
-	Version     uint8           `json:"version"`
-	CIC         string          `json:"cic"`
-	File        FileInfo        `json:"file"`
+	CRC1        string          `json:"crc1" xml:"crc1"`
+	CRC2        string          `json:"crc2" xml:"crc2"`
+	ImageName   string          `json:"image_name" xml:"image_name"`
+	MediaFormat CodeDescription `json:"media_format" xml:"media_format"`
+	CartridgeId string          `json:"cartridge_id" xml:"cartridge_id"`
+	Region      Region          `json:"region" xml:"region"`
+	Version     uint8           `json:"version" xml:"version"`
+	CIC         string          `json:"cic" xml:"cic"`
+	File        FileInfo        `json:"file" xml:"file"`
 }
 
 // 4-char ROM identifier, e.g. NSME = Super Mario 64 (USA), NSMJ = Super Mario 64 (Japan)

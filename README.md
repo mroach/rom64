@@ -18,7 +18,7 @@ List ROM files in a given directory. By default, output is in a human-readable t
 
 #### Options
 
-* `-f`, `--format` Defaults to `table` but can also be `text`, `json`, `csv`, `tab`
+* `-f`, `--format` Defaults to `table` but can also be `text`, `json`, `csv`, `tab`, `xml`
 * `-c`, `--columns` Defaults to most useful columns. Can be a comma-separated list, or specified multiple times.
 
 **Available columns**
