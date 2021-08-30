@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/mroach/rom64/formatters"
 	"github.com/mroach/rom64/rom"
 	"github.com/spf13/cobra"
@@ -42,7 +45,8 @@ func init() {
 		},
 	}
 
-	infoCmd.Flags().StringVarP(&outputFormat, "output", "o", "text", "Output format")
+	infoCmd.Flags().StringVarP(&outputFormat, "output", "o", "text",
+		fmt.Sprintf("Output format (%s)", strings.Join(formatters.OutputFormats, ", ")))
 	infoCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
 	rootCmd.AddCommand(infoCmd)

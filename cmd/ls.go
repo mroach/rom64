@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/mroach/rom64/formatters"
@@ -103,7 +104,8 @@ func init() {
 		},
 	}
 
-	lsCmd.Flags().StringVarP(&outputFormat, "output", "o", "table", "Output format")
+	lsCmd.Flags().StringVarP(&outputFormat, "output", "o", "table",
+		fmt.Sprintf("Output format (%s)", strings.Join(formatters.OutputFormats, ", ")))
 	lsCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
 	rootCmd.AddCommand(lsCmd)

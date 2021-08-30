@@ -7,6 +7,8 @@ import (
 	"github.com/mroach/rom64/rom"
 )
 
+var OutputFormats = []string{"csv", "tab", "json", "table", "text"}
+
 func DefaultColumns(outputFormat string) []string {
 	switch outputFormat {
 	case "csv", "tab":
