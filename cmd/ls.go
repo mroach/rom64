@@ -18,6 +18,7 @@ func init() {
 	var columns []string
 	calcMd5 := false
 	calcSha := false
+	calcCrc := false
 
 	var lsCmd = &cobra.Command{
 		Use:     "ls",
@@ -52,6 +53,9 @@ func init() {
 				if column == "file_sha1" {
 					calcSha = true
 				}
+				if column == "file_crc1" || column == "file_crc2" {
+					calcCrc = true
+				}
 			}
 
 			results := make(chan rom.RomFile, len(files))
@@ -74,6 +78,11 @@ func init() {
 					}
 					if calcSha {
 						if err := info.AddSHA1(); err != nil {
+							errs <- err
+						}
+					}
+					if calcCrc {
+						if err := info.CalcCRC(); err != nil {
 							errs <- err
 						}
 					}

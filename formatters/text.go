@@ -14,6 +14,8 @@ var textFormat = `File:
   Checksums:
     MD5:     {{if .File.MD5}}{{.File.MD5}}{{else}}Not Calculated{{end}}
     SHA1:    {{if .File.SHA1}}{{.File.SHA1}}{{else}}Not Calculated{{end}}
+    CRC 1:   {{if .File.CRC1}}{{.File.CRC1}}{{else}}Not Calculated{{end}}
+    CRC 2:   {{if .File.CRC2}}{{.File.CRC2}}{{else}}Not Calculated{{end}}
 
 ROM:
   ID:        {{.Serial}}

@@ -113,6 +113,8 @@ type FileInfo struct {
 	Size   int             `json:"size" xml:"size"`
 	MD5    string          `json:"md5" xml:"md5"`
 	SHA1   string          `json:"sha1" xml:"sha1"`
+	CRC1   string          `json:"crc1" xml:"crc1"`
+	CRC2   string          `json:"crc2" xml:"crc2"`
 }
 
 type RomFile struct {

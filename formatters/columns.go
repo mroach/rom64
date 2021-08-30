@@ -55,6 +55,16 @@ var Columns = map[string]Column{
 		"SHA-1 hash/checksum of the file on disk. Lower-case hexadecimal.",
 		func(r rom.RomFile) string { return r.File.SHA1 },
 	},
+	"file_crc1": {
+		"Calculated CRC-1",
+		"CRC 1 (CRC HI) calculated from the ROM file.",
+		func(r rom.RomFile) string { return r.File.CRC1 },
+	},
+	"file_crc2": {
+		"Calculated CRC-2",
+		"CRC 2 (CRC LO) calculated from the ROM file.",
+		func(r rom.RomFile) string { return r.File.CRC2 },
+	},
 	"image_name": {
 		"Image Name",
 		"Image name / game title embedded in the ROM.",
@@ -86,12 +96,12 @@ var Columns = map[string]Column{
 		func(r rom.RomFile) string { return r.CIC },
 	},
 	"crc1": {
-		"CRC1",
+		"CRC-1",
 		"CRC1 checksum of ROM internals. Also known as 'CRC HI'",
 		func(r rom.RomFile) string { return r.CRC1 },
 	},
 	"crc2": {
-		"CRC2",
+		"CRC-2",
 		"CRC2 checksum of ROM internals. Also known as 'CRC LO'",
 		func(r rom.RomFile) string { return r.CRC2 },
 	},

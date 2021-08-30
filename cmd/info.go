@@ -36,8 +36,11 @@ func init() {
 				return err
 			}
 
-			err = info.AddHashes()
-			if err != nil {
+			if err = info.AddHashes(); err != nil {
+				return err
+			}
+
+			if err = info.CalcCRC(); err != nil {
 				return err
 			}
 
