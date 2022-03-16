@@ -21,6 +21,17 @@ List ROM files in a given directory. By default, output is in a human-readable t
 * `-o`, `--output` Defaults to `table` but can also be `text`, `json`, `csv`, `tab`, `xml`
 * `-c`, `--columns` Defaults to most useful columns. Can be a comma-separated list, or specified multiple times.
 
+#### Checksums
+
+When using `table`, `csv`, or `tab` format, checksums are calculated if the column is requested with `-c | --columns`.
+
+When using `text`, `json`, or `xml` format, by default *no checksums are calculated* because of the CPU overhead.
+To calculate checksums in these modes, request them using the `-c | --columns` flag.
+
+```
+rom64 ls . --output text --columns file_md5,file_sha1,file_crc1,file_crc2
+```
+
 **Available columns**
 
 | Column ID        | Description |
