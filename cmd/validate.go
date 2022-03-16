@@ -25,6 +25,11 @@ func init() {
 			if err != nil {
 				return err
 			}
+
+			if romfile.Serial() == "" {
+				return fmt.Errorf("ROM has no serial number which is required to look it up in the DAT file.")
+			}
+
 			if err = romfile.AddSHA1(); err != nil {
 				return err
 			}
