@@ -54,10 +54,10 @@ var FileFormats = map[string]string{
 }
 
 type Region struct {
-	Id          string `json:"id"`
-	Short       string `json:"short_name"`
-	Description string `json:"description"`
-	VideoSystem string `json:"video_system"`
+	Id          string `json:"id" xml:"id"`
+	Short       string `json:"short_name" xml:"short_name"`
+	Description string `json:"description" xml:"description"`
+	VideoSystem string `json:"video_system" xml:"video_system"`
 }
 
 var Regions = map[string]Region{
@@ -102,8 +102,8 @@ type romFileHeader struct {
 }
 
 type CodeDescription struct {
-	Code        string `json:"code"`
-	Description string `json:"description"`
+	Code        string `json:"code" xml:"code"`
+	Description string `json:"description" xml:"description"`
 }
 
 type FileInfo struct {
