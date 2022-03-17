@@ -16,6 +16,7 @@ import (
 func init() {
 	var outputFormat string
 	var columns []string
+	var quiet bool
 	calcMd5 := false
 	calcSha := false
 	calcCrc := false
@@ -104,7 +105,7 @@ func init() {
 				return fileInfos[i].File.Name < fileInfos[j].File.Name
 			})
 
-			if len(errs) > 0 {
+			if len(errs) > 0 && !quiet {
 				l := log.New(os.Stderr, "", 1)
 				l.Println("Errors were encountered while listing some files:")
 				for item := range errs {
@@ -119,6 +120,7 @@ func init() {
 	lsCmd.Flags().StringVarP(&outputFormat, "output", "o", "table",
 		fmt.Sprintf("Output format (%s)", strings.Join(formatters.OutputFormats, ", ")))
 	lsCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
+	lsCmd.Flags().BoolVarP(&quiet, "quiet", "q", false, "Quiet mode. Suppress non-fatal errors.")
 
 	rootCmd.AddCommand(lsCmd)
 }
