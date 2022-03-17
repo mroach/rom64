@@ -59,7 +59,10 @@ func init() {
 			}
 
 			results := make(chan rom.RomFile, len(files))
-			errs := make(chan error, len(files))
+			errs := make(chan struct {
+				string
+				error
+			}, len(files))
 
 			var wg sync.WaitGroup
 			for _, rompath := range files {
@@ -68,22 +71,22 @@ func init() {
 					defer wg.Done()
 					info, err := rom.FromPath(rompath)
 					if err != nil {
-						errs <- err
+						sendError(errs, rompath, err)
 						return
 					}
 					if calcMd5 {
 						if err := info.AddMD5(); err != nil {
-							errs <- err
+							sendError(errs, rompath, err)
 						}
 					}
 					if calcSha {
 						if err := info.AddSHA1(); err != nil {
-							errs <- err
+							sendError(errs, rompath, err)
 						}
 					}
 					if calcCrc {
 						if err := info.CalcCRC(); err != nil {
-							errs <- err
+							sendError(errs, rompath, err)
 						}
 					}
 					results <- info
@@ -103,9 +106,9 @@ func init() {
 
 			if len(errs) > 0 {
 				l := log.New(os.Stderr, "", 1)
-				l.Println("Some ROMs could not be read:")
-				for err := range errs {
-					l.Println(err)
+				l.Println("Errors were encountered while listing some files:")
+				for item := range errs {
+					l.Printf("%s: %s\n", item.string, item.error)
 				}
 			}
 
@@ -118,4 +121,14 @@ func init() {
 	lsCmd.Flags().StringSliceVarP(&columns, "columns", "c", make([]string, 0), "Column selection")
 
 	rootCmd.AddCommand(lsCmd)
+}
+
+func sendError(queue chan struct {
+	string
+	error
+}, path string, err error) {
+	queue <- struct {
+		string
+		error
+	}{path, err}
 }
