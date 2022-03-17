@@ -55,4 +55,4 @@ lint:
 # Before making a release, create a tag with `git tag vX.Y.Z`
 release: clean all
 	git push --tags
-	gh release create $(CURRENT_TAG) --title $(CURRENT_TAG) --generate-notes
+	gh release create $(CURRENT_TAG) --title $(CURRENT_TAG) --generate-notes $(BUILD_DIR)/$(BIN_NAME)-*
