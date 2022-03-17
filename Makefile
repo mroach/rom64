@@ -1,5 +1,6 @@
 BIN_NAME := rom64
 BUILD_DIR := build
+PREFIX ?= /opt/local
 BUILD_TIME := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 VERSION ?= $(shell git tag -l --sort=-creatordate 'v*' | head -n1)+$(shell git rev-parse --short HEAD)
 
@@ -38,7 +39,7 @@ fresh: clean
 	$(MAKE) all
 
 install:
-	cp build/$(BIN_NAME)-$(LOCAL_GOOS)-$(LOCAL_GOARCH) $(HOME)/bin/$(BIN_NAME)
+	cp build/$(BIN_NAME)-$(LOCAL_GOOS)-$(LOCAL_GOARCH) $(PREFIX)/bin/$(BIN_NAME)
 
 lint:
 	gofmt -s -w .
