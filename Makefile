@@ -5,7 +5,7 @@ BUILD_TIME := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 CURRENT_TAG = $(shell git tag -l --sort=-creatordate 'v*' | head -n1)
 CURRENT_SHA = $(shell git rev-parse --short HEAD)
 
-ifeq ($(CURRENT_TAG),$(CURRENT_SHA))
+ifeq ($(shell git rev-parse --short $(CURRENT_TAG)),$(CURRENT_SHA))
 	VERSION = $(CURRENT_TAG)
 else
 	VERSION = $(CURRENT_TAG)+$(CURRENT_SHA)
