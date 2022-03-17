@@ -2,7 +2,14 @@ BIN_NAME := rom64
 BUILD_DIR := build
 PREFIX ?= /opt/local
 BUILD_TIME := $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
-VERSION ?= $(shell git tag -l --sort=-creatordate 'v*' | head -n1)+$(shell git rev-parse --short HEAD)
+CURRENT_TAG = $(shell git tag -l --sort=-creatordate 'v*' | head -n1)
+CURRENT_SHA = $(shell git rev-parse --short HEAD)
+
+ifeq ($(CURRENT_TAG),$(CURRENT_SHA))
+	VERSION = $(CURRENT_TAG)
+else
+	VERSION = $(CURRENT_TAG)+$(CURRENT_SHA)
+endif
 
 PKGNAME = github.com/mroach/rom64
 SETVARS = '$(PKGNAME)/version.BuildTime=$(BUILD_TIME)' \
@@ -20,7 +27,7 @@ dynamic_target = $(subst -, , $@)
 derived_os = $(word 2, $(dynamic_target))
 derived_arch = $(word 3, $(dynamic_target))
 
-.PHONY: clean fresh install lint
+.PHONY: clean fresh install lint release
 
 all: $(BUILD_DIR)/$(BIN_NAME)-linux-amd64 \
 	 $(BUILD_DIR)/$(BIN_NAME)-linux-arm64 \
@@ -44,3 +51,8 @@ install:
 lint:
 	gofmt -s -w .
 	golangci-lint run
+
+# Before making a release, create a tag with `git tag vX.Y.Z`
+release: clean all
+	git push --tags
+	gh release create $(CURRENT_TAG) --title $(CURRENT_TAG) --generate-notes
