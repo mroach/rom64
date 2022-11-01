@@ -14,7 +14,7 @@ func (r *RomFile) ValidateWithDat(df dat.DatFile) (matches, mismatches []dat.Rom
 
 	if r.File.Format.Code != FormatZ64 {
 		return matches, mismatches, fmt.Errorf(
-			"File must be in z64 (big-endian) format. This file is %s (%s).",
+			"File must be in z64 (big-endian) format. This file is %s (%s). The `convert` command can help.",
 			r.File.Format.Code,
 			r.File.Format.Description)
 	}
