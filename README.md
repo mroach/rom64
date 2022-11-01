@@ -205,7 +205,19 @@ If you want to use your own, specify it with the `--datfile` flag.
 ```
 $ rom64 validate ~/Downloads/n64/Tsumi\ to\ Batsu\ -\ Hoshi\ no\ Keishousha\ \(Japan\).z64
 Found 1 datfile entries for ROM serial 'NGUJ'
-  SHA-1 MATCH  581297B9D5C3A4C33169AE0AAE218C742CD9CBCF Tsumi to Batsu - Hoshi no Keishousha (Japan).z64
+SHA-1 MATCH  581297B9D5C3A4C33169AE0AAE218C742CD9CBCF "Tsumi to Batsu - Hoshi no Keishousha (Japan).z64"
+```
+
+#### `--rename-validated`
+
+With this flag, after a ROM's hash has been validated against the datfile, the ROM file will
+be renamed to match what's in the datfile, if it doesn't already.
+
+```
+$ rom64 validate --rename-validated sm64.z64
+Found 1 datfile entries for ROM serial 'NSME'
+SHA-1 MATCH  9BEF1128717F958171A4AFAC3ED78EE2BB4E86CE "Super Mario 64 (USA).z64"
+Renaming "sm64.z64" => "Super Mario 64 (USA).z64"
 ```
 
 [dat-o-matic]: https://datomatic.no-intro.org/index.php?page=download&s=24&op=dat
